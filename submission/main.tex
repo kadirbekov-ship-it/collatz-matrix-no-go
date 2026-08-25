@@ -325,7 +325,7 @@ There is a stronger form in the irreducible branch.
 If $F+T$ is irreducible, then all six carry inequalities are matrix
 equalities.  In particular,
 \[
- FD=OF,\qquad TO=DF,qquad TD=DT,qquad TFD=DF^2.
+ FD=OF,\qquad TO=DF,\qquad TD=DT,\qquad TFD=DF^2.
 \tag{K}
 \]
 \end{lemma}
@@ -347,7 +347,7 @@ $TFD=T(OF)=(TO)F=(DF)F$.
 
 On the complement in Lemma~\ref{lem:complement}, write
 \[
- F=\mat{u}{p}{r}{0},\qquad u\ge1,quad p,r\ge0.
+ F=\mat{u}{p}{r}{0},\qquad u\ge1,\quad p,r\ge0.
 \]
 The following two propositions contain the structural core of the proof.
 
@@ -376,7 +376,7 @@ strictly above it.
 If $p>0,r=0$, rigidity gives
 $z_{10}=o_{10}=0$ and, with $x=o_{00}$,
 \[
- x\ge u^2,\qquad ud_{00}+pd_{10}=ux,qquad
+ x\ge u^2,\qquad ud_{00}+pd_{10}=ux,\qquad
  t_{00}x=ud_{00}.
 \]
 Thus $t_{00}x+pd_{10}=ux$ and $t_{00}\le u$.  The first component of
@@ -398,12 +398,12 @@ strictly above it.
 
 The case $p=0,r>0$ is the transpose-shaped calculation relevant to the first column.  It yields
 \[
- t_{01}=0,quad t_{00}=u,quad
- z_{01}=o_{01}=d_{01}=0,quad z_{00}=o_{00}=d_{00},
+ t_{01}=0,\quad t_{00}=u,\quad
+ z_{01}=o_{01}=d_{01}=0,\quad z_{00}=o_{00}=d_{00},
 \]
 and then, with $A=au+br>0$,
 \[
- u(ao_{00}+bo_{10})\le A d_{00},qquad
+ u(ao_{00}+bo_{10})\le A d_{00},\qquad
  ao_{00}+bo_{10}\ge uA.
 \]
 Hence $d_{00}\ge u^2$, whereas the first component of $TG\ge DG$
@@ -422,7 +422,7 @@ There is no solution with $u,p,r\ge1$.
 Now $F+T$ is irreducible, so Lemma~\ref{lem:perronrigidity} applies.  Let
 $\lambda>1$ be the Perron root of $F$; the other root $\mu<0$ satisfies
 \[
- \lambda+\mu=u,qquad \lambda\mu=-pr,qquad
+ \lambda+\mu=u,\qquad \lambda\mu=-pr,\qquad
  F^2=uF+prI.
 \tag{L}
 \]
@@ -455,7 +455,7 @@ contradicts $\lambda>1$.
 \begin{corollary}[Exhaustive residual classification]\label{cor:forms}
 Every coefficient assignment not covered by Lemma~\ref{lem:first} has
 \[
- F^2=F,qquad
+ F^2=F,\qquad
  F\in\left\{
  \mat{1}{0}{0}{0},
  \mat{1}{p}{0}{0}\ (p\ge1),
@@ -512,7 +512,7 @@ diagonal equations give $z_{00}=o_{00}=d_{00}=t_{00}=1$.
 Set $s=t_{01}$, $y=t_{11}$, $z=z_{01}$, $o=o_{01}$,
 $q=o_{11}$, $d=d_{01}$, and $e=d_{11}$.  The carry and left rules imply
 \[
- o\ge s+zy,quad z\ge s+oy,quad az\ge as+by,quad qy=0.
+ o\ge s+zy,\quad z\ge s+oy,\quad az\ge as+by,\quad qy=0.
 \]
 If $y>0$, these force $y=1,s=0,o=z$, and $az\ge b$, which is scheme~6.
 If $y=0$ and $s\le d$, scheme~5 applies.  If $y=0$ and $s>d$, the last
@@ -673,11 +673,11 @@ The authors declare no competing interests.
 No funding was received for this work.
 
 \paragraph{Data and code availability.}
-All source code, exact certificates, tests, and the manuscript sources will
-be available at
+All source code, exact certificates, tests, and the manuscript sources are
+publicly available at
 \url{https://github.com/kadirbekov-ship-it/collatz-matrix-no-go} and in a
 versioned archival deposit at
-\url{https://doi.org/10.5281/zenodo.22097842}.
+\url{https://doi.org/10.5281/zenodo.22098492}.
 
 \paragraph{Author contributions.}
 K.K. and D.K. contributed to the conception, oversight of the AI-assisted
@@ -755,15 +755,15 @@ without simplification.
 Scheme~1 is Lemma~\ref{lem:first}.  In the complement
 $b>0,f_{11}=0,af_{01}<b$, scheme~2 is equivalent to
 \[
- f_{10}=0,qquad z_{11}\ge1,qquad
+ f_{10}=0,\qquad z_{11}\ge1,\qquad
  ad_{01}+bd_{11}\ge a(f_{01}+t_{01}).
 \]
 Scheme~5 is equivalent there to
 \begin{gather*}
- f_{00}=1,quad f_{01}=0,quad t_{11}=0,quad t_{10}\le f_{10},\\
+ f_{00}=1,\quad f_{01}=0,\quad t_{11}=0,\quad t_{10}\le f_{10},\\
  2a(1-o_{00})+bf_{10}(2-o_{00})-bo_{10}\le0,\\
  a(1-z_{00})+b(2f_{10}-d_{10}-z_{10})\le0,\\
- t_{00}\le d_{00},qquad t_{01}\le d_{01}.
+ t_{00}\le d_{00},\qquad t_{01}\le d_{01}.
 \end{gather*}
 Schemes~3 and~6 are the special projection-form branches identified in
 Proposition~\ref{prop:projection}; scheme~12 is the upper-form branch in

@@ -15,7 +15,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
-PREFIX = "collatz-matrix-no-go-1.0.0"
+PREFIX = "collatz-matrix-no-go-1.0.1"
 
 EXACT_FILES = (
     ".github/workflows/tests.yml",
@@ -36,6 +36,7 @@ EXACT_FILES = (
     "submission/AUTHOR_INFO_REQUIRED.md",
     "submission/NOVELTY_CHECK.md",
     "submission/PRE_SUBMISSION_REPORT.md",
+    "submission/CHECKSUMS.sha256",
 )
 
 GLOBS = (

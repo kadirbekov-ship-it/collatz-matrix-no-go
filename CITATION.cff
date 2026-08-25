@@ -12,10 +12,10 @@ authors:
     email: "daniyal.kadirbekov@gmail.com"
     affiliation: "Independent Researcher, Tashkent, Uzbekistan"
     orcid: "https://orcid.org/0009-0006-0320-9821"
-version: 1.0.0
+version: 1.0.1
 date-released: 2026-08-25
 license: MIT
 repository-code: "https://github.com/kadirbekov-ship-it/collatz-matrix-no-go"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.22097842"
+    value: "10.5281/zenodo.22098492"

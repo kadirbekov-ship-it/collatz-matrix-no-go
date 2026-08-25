@@ -1,6 +1,6 @@
 [project]
 name = "socratic-collatz-graph"
-version = "1.0.0"
+version = "1.0.1"
 description = "Exact certificates and structural no-go results for Collatz rewrite-system proof languages"
 requires-python = ">=3.11"
 license = {text = "MIT"}

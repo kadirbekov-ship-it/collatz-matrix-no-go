@@ -6,7 +6,7 @@ Yolcu, Aaronson, and Heule encoded the Collatz conjecture as termination of an e
 
 The proof combines exact Farkas certificates, carry-rule rigidity, Perron–Frobenius arguments, and a symbolic classification of all remaining zero patterns. The accompanying artifact reconstructs parameterized certificates using exact integer arithmetic and includes deterministic regression tests. We describe the result as computer-assisted, not formally verified: the artifact checks instances and certificate algebra, while universal coverage is proved in the manuscript.
 
-The public artifact repository is <https://github.com/kadirbekov-ship-it/collatz-matrix-no-go>. Its published archival DOI is <https://doi.org/10.5281/zenodo.22097842>.
+The public artifact repository is <https://github.com/kadirbekov-ship-it/collatz-matrix-no-go>. Its archival DOI for version 1.0.1 is <https://doi.org/10.5281/zenodo.22098492>.
 
 The result does not prove or disprove the Collatz conjecture. It excludes one sharply defined automated proof language and directly complements a paper previously published in this journal. To the best of our knowledge, the unbounded two-dimensional no-go theorem has not previously appeared.
 

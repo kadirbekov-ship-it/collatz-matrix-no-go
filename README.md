@@ -1,7 +1,7 @@
-# Socratic Adversarial Graph: finite Collatz experiment
+# Collatz matrix-interpretation no-go artifact
 
-Published artifact DOI:
-[10.5281/zenodo.22097842](https://doi.org/10.5281/zenodo.22097842).
+Version 1.0.1 artifact DOI:
+[10.5281/zenodo.22098492](https://doi.org/10.5281/zenodo.22098492).
 
 ## Publication package
 

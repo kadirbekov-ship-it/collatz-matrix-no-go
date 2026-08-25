@@ -83,7 +83,7 @@ The artifact is therefore **computer-assisted and independently checkable**, but
 Before submission:
 
 1. Replace the repository and DOI placeholders in `CITATION.cff`.
-2. Create a public Git release tagged `v1.0.0`.
+2. Create a public Git release tagged `v1.0.1`.
 3. Archive that exact tag in Zenodo or an equivalent repository.
 4. Put the repository URL and DOI into the manuscript and cover letter.
 5. Record SHA-256 checksums of the source archive and PDF.

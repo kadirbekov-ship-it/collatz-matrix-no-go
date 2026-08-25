@@ -12,7 +12,7 @@ Resolved:
 
 - Country/city: Tashkent, Uzbekistan.
 - Public repository account/organization: `kadirbekov-ship-it`.
-- Published archival DOI: `10.5281/zenodo.22097842`.
+- Version 1.0.1 archival DOI: `10.5281/zenodo.22098492`.
 
 Optional but useful:
 

@@ -28,7 +28,7 @@ Novelty wording is deliberately qualified with â€œto the best of our knowledge.â
 - No Lean, Coq, Isabelle, or proof-producing SMT formalization exists.
 - The full symbolic universal proof has not been independently peer reviewed.
 - Earlier Claude review checked central lemmas and classification but was neither independent nor line-by-line.
-- Local PDF compilation is pending because this offline environment has no installed TeX bundle; the source has balanced braces and satisfies the structural JAR checks, but it still requires compilation in a normal TeX/Springer environment.
+- The manuscript was compiled with Tectonic, all 11 pages were visually inspected, links were checked, and no undefined citations, references, or overfull boxes remain.
 
 ## Files ready
 
@@ -38,9 +38,10 @@ Novelty wording is deliberately qualified with â€œto the best of our knowledge.â
 - `JAR_CHECKLIST.md`: journal compliance checklist.
 - `NOVELTY_CHECK.md`: search record and safe claim wording.
 - `ARTIFACT.md`: exact reproduction and trust boundary.
-- `dist/collatz-matrix-no-go-1.0.0-draft.zip`: deterministic audit package.
+- `output/pdf/collatz-matrix-no-go-manuscript.pdf`: visually verified submission PDF.
+- `output/submission/collatz-matrix-no-go-source.zip`: independently unpacked and recompiled source package.
+- `dist/collatz-matrix-no-go-1.0.1.zip`: deterministic archival artifact package.
 
 ## Blocking items before actual upload
 
-1. Successful PDF compilation and visual proofing.
-2. Human authorization at the journal portal for publisher declarations and the final submit action.
+1. Human authorization at the journal portal for publisher declarations and the final submit action.

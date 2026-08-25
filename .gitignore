@@ -1,6 +1,11 @@
 __pycache__/
 *.py[cod]
 dist/
+tmp/
+output/pdf/*.aux
+output/pdf/*.log
+output/pdf/*.out
+output/pdf/main.pdf
 submission/*.aux
 submission/*.log
 submission/*.out
