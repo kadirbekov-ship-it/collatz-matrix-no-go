@@ -1,0 +1,820 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Tsys}{\mathcal{T}}
+\newcommand{\Xsys}{\mathcal{X}}
+\newcommand{\gec}{\mathrel{\geq_{\mathrm c}}}
+\newcommand{\gtc}{\mathrel{>_{\mathrm c}}}
+\newcommand{\mat}[4]{\begin{pmatrix}#1&#2\\#3&#4\end{pmatrix}}
+
+\title{Obstructions to Low-Dimensional Natural Matrix Interpretations\\
+for a Mixed-Base Collatz Rewrite System}
+\author{
+Kadyrbekov Khamit\thanks{Corresponding author: \texttt{kadirbekov@gmail.com}}\\
+\small Independent Researcher, Tashkent, Uzbekistan\\
+\small \texttt{kadirbekov@gmail.com}
+\and
+Kadirbekov Daniyal\\
+\small Independent Researcher, Tashkent, Uzbekistan\\
+\small \texttt{daniyal.kadirbekov@gmail.com}\\
+\small ORCID: \href{https://orcid.org/0009-0006-0320-9821}{0009-0006-0320-9821}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Yolcu, Aaronson, and Heule encoded the Collatz conjecture as termination of
+an eleven-rule mixed binary--ternary string-rewriting system and asked
+whether standard termination interpretations can orient that system.  We
+prove a complete negative result for one natural proof language.  No
+one-stage relative affine matrix interpretation over the nonnegative
+integers exists in dimensions one or two when the two rules implementing
+the Collatz update are required to be strict and the nine base-conversion
+rules are weak.  In dimension two the matrix entries and affine offsets are
+unbounded.  The proof combines exact Farkas certificates, a rigidity lemma
+for the six carry rules, a Perron--Frobenius argument for the irreducible
+case, and an exhaustive symbolic classification of the remaining zero
+patterns.  A deterministic checker reconstructs every parameterized
+certificate using integer arithmetic; bounded enumeration was used only to
+discover the certificate families and to regression-test the symbolic
+proof.  The result does not resolve the Collatz conjecture and does not
+exclude higher-dimensional, arctic, tropical, dependency-pair, or
+multi-stage interpretations.  It instead settles the unbounded
+two-dimensional natural one-stage case of a broader obstruction question
+raised by the original encoding, and illustrates a reproducible route from
+finite counterexample-guided search to a universal no-go theorem.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Collatz conjecture; string rewriting;
+termination; matrix interpretation; Farkas certificate; computer-assisted
+mathematics
+
+\section{Introduction}
+
+The Collatz map sends an integer $n>0$ to $n/2$ when $n$ is even and to
+$3n+1$ when $n$ is odd.  Its conjectured eventual arrival at $1$ remains
+open.  Yolcu, Aaronson, and Heule (YAH) translated the conjecture into the
+termination of a finite string-rewriting system and applied automatic
+termination tools to weakened variants~\cite{yah}.  Their construction is
+especially useful because it turns a familiar number-theoretic question
+into a sharply specified question about proof search.
+
+Natural matrix interpretations are a standard termination technique
+\cite{endmat,zantema}.  A successful interpretation for the full YAH system
+would prove its termination and hence Collatz.  Failure in a prescribed
+class has the opposite meaning: it rules out a proof language, not the
+conjecture.  YAH explicitly raised the possibility that their full system
+might admit no suitable matrix or arctic interpretation.  This paper
+settles one precise part of that question.
+
+Our principal result is a universal no-go theorem for one-stage relative
+natural affine interpretations in dimensions $1$ and $2$.  Only the two
+rules that perform the Collatz step are required to decrease strictly; the
+nine rules that convert between bases are allowed to be weak.  Thus the
+result addresses the rule-removal obligation that actually matters, rather
+than the unnecessarily strong requirement that every rule be strict.
+
+The dimension-two proof was found in three stages.  First, exact exhaustive
+search over small matrices produced integer dual certificates.  Second,
+the supports of these certificates were generalized to parameterized
+families.  Finally, the uncovered symbolic region was classified without
+any bound on the entries.  Computation is therefore a discovery and checking
+device, not the source of the universal quantifier.  The mathematical proof
+is given below; the artifact independently expands and checks the
+certificate algebra.
+
+To the best of our knowledge, no earlier publication proves the unbounded
+dimension-two no-go theorem stated here.  The scope is deliberately narrow:
+dimensions at least three, other ordered semirings, dependency pairs, and
+sequential rule-removal strategies remain open.
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=*]
+  \item A scalar no-go theorem for the relative YAH obligation.
+  \item A complete unbounded two-dimensional no-go theorem over $\N$.
+  \item A finite collection of parameterized Farkas certificates and a
+        deterministic exact checker.
+  \item A case study in converting bounded CEGAR-style proof search into a
+        symbolic theorem while retaining failed conjectures and scope limits.
+\end{enumerate}
+
+\section{The rewrite system and interpretations}
+
+Let the alphabet be
+$\Sigma=\{f,t,0,1,2,<,>\}$.  The mixed-base system $\Tsys$ consists of
+the rules in Table~\ref{tab:rules}.  We write words by juxtaposition.
+
+\begin{table}[ht]
+\centering
+\caption{The YAH mixed binary--ternary system $\Tsys$.}
+\label{tab:rules}
+\begin{tabular}{lll}
+\toprule
+class & name & rule\\
+\midrule
+dynamic & even & $f>\to >$\\
+dynamic & odd  & $t>\to 2>$\\
+\midrule
+carry & f0 & $f0\to0f$\\
+carry & f1 & $f1\to0t$\\
+carry & f2 & $f2\to1f$\\
+carry & t0 & $t0\to1t$\\
+carry & t1 & $t1\to2f$\\
+carry & t2 & $t2\to2t$\\
+\midrule
+left & 0 & $<0\to<t$\\
+left & 1 & $<1\to<ff$\\
+left & 2 & $<2\to<ft$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+YAH prove that termination of $\Tsys$ is equivalent to the Collatz
+conjecture~\cite[Theorem~3.17]{yah}.  Let $\Xsys$ denote the nine
+non-dynamic rules.  They terminate independently, so a rule-removal proof
+may orient the two dynamic rules strictly and every rule in $\Xsys$ weakly.
+
+\begin{definition}[Natural affine matrix interpretation]
+Fix $d\ge1$.  Each symbol $s\in\Sigma$ is assigned
+\[
+  [s](x)=M_sx+v_s,
+  \qquad M_s\in\N^{d\times d},\quad v_s\in\N^d.
+\]
+The upper-left entry of every $M_s$ is positive, the standard sufficient
+condition for strict monotonicity in the first component.  The
+interpretation of a word is functional composition from left to right.
+We use the orders
+\[
+ x\gec y\iff x_i\ge y_i\ \text{for all }i,
+ \qquad
+ x\gtc y\iff x_0>y_0\ \text{and }x_i\ge y_i\ (i>0).
+\]
+An interpretation is \emph{relative} for $(\Tsys,\Xsys)$ if the two dynamic
+rules are oriented by $\gtc$ and the other nine by $\gec$.
+\end{definition}
+
+For a word $w=s_1\cdots s_k$ write
+\[
+ M_w=M_{s_1}\cdots M_{s_k},\qquad
+ v_w=\sum_{j=1}^{k}M_{s_1}\cdots M_{s_{j-1}}v_{s_j}.
+\]
+Orientation of $\ell\to r$ for all $x\in\N^d$ requires
+$M_\ell\ge M_r$ entrywise and the corresponding weak or strict inequality
+between $v_\ell$ and $v_r$.
+
+For dimension two we abbreviate
+\[
+ F=M_f,\quad T=M_t,\quad Z=M_0,\quad O=M_1,\quad D=M_2,
+ \quad L=M_<,\quad G=M_>,
+\]
+and let $\ell=e_0^{\mathsf T}L=(a,b)$, where $a\ge1$ and $b\ge0$.
+The eleven coefficient obligations are
+\begin{align}
+ FG&\ge G, & TG&\ge DG,\label{eq:dyncoeff}\\
+ FZ&\ge ZF, & FO&\ge ZT, & FD&\ge OF,\label{eq:fcarry}\\
+ TZ&\ge OT, & TO&\ge DF, & TD&\ge DT,\label{eq:tcarry}\\
+ LZ&\ge LT, & LO&\ge LF^2, & LD&\ge LFT.\label{eq:leftcoeff}
+\end{align}
+All matrix inequalities in this paper are entrywise unless stated otherwise.
+
+\section{Exact dual certificates}
+
+Once the matrices are fixed, the offset obligations are linear inequalities
+in the $7d$ nonnegative offset variables.  We use the following elementary
+form of Farkas' lemma~\cite{schrijver}.
+
+\begin{lemma}[Certificate criterion]\label{lem:farkas}
+For each rule $r$ and component $i$, write the offset difference as
+$\Delta_r^{(i)}(v)$ and its required right-hand side as
+$\epsilon_r^{(i)}$, where $\epsilon=1$ exactly for component $0$ of a
+strict rule and $0$ otherwise.  If nonnegative integers
+$\lambda_{r,i}$ satisfy
+\[
+  \sum_{r,i}\lambda_{r,i}\Delta_r^{(i)}(v)\le0
+  \quad\text{for every }v\in\N^{7d},
+  \qquad
+  \sum_{r,i}\lambda_{r,i}\epsilon_r^{(i)}>0,
+\]
+then the offset system is infeasible.
+\end{lemma}
+
+\begin{proof}
+The assumed orientation inequalities imply that the displayed left side is
+at least the positive displayed right side.  The coefficient condition and
+$v\ge0$ imply that it is at most zero, a contradiction.
+\end{proof}
+
+The artifact represents a certificate as a finite list
+$(r,i,\lambda_{r,i})$, reconstructs every coefficient from the original
+rules, and accepts only if all coefficients are nonpositive and the strict
+right side is positive.  No floating-point result is trusted.
+
+\section{The scalar obstruction}
+
+\begin{theorem}\label{thm:scalar}
+There is no one-dimensional natural affine interpretation in which the two
+dynamic rules of $\Tsys$ are strict and the nine rules of $\Xsys$ are weak.
+\end{theorem}
+
+\begin{proof}
+Write $[s](x)=a_sx+b_s$ with $a_s\ge1$ and $b_s\ge0$.  The coefficient
+parts of five weak obligations give
+\[
+ a_2\ge a_fa_t,\quad a_t\ge a_2,\quad
+ a_fa_1\ge a_0a_t,\quad a_fa_2\ge a_1a_f,\quad
+ a_ta_0\ge a_1a_t.
+\]
+The first two force $a_f=1$ and $a_t=a_2$.  Cancelling positive factors in
+the last three gives
+$a_1\ge a_0a_2$, $a_2\ge a_1$, and $a_0\ge a_1$; hence
+$a_1\ge a_1^2$ and
+\[
+ a_f=a_t=a_0=a_1=a_2=1.
+\]
+Strictness of $t>\to2>$ requires $b_t>b_2$, whereas weakness of
+$<2\to<ft$ gives $b_2\ge b_f+b_t\ge b_t$.  This is impossible.
+\end{proof}
+
+\section{The two-dimensional obstruction}
+
+We now prove the main result.  There is no upper bound on a matrix entry or
+offset in this section.
+
+\subsection{The first certificate and its complement}
+
+\begin{lemma}[First-row growth]\label{lem:first}
+If \eqref{eq:dyncoeff}--\eqref{eq:leftcoeff} hold and
+$\ell F\ge\ell$, then the relative offset system is infeasible.
+\end{lemma}
+
+\begin{proof}
+The last inequality of \eqref{eq:leftcoeff} gives
+$\ell D\ge\ell FT\ge\ell T$.  Take component $0$ of the odd dynamic
+rule with weight $a$, component $1$ with weight $b$, and component $0$ of
+$<2\to<ft$ with weight $1$.  The combined coefficients of the offsets
+$2,f,t,>$ are respectively $0,-\ell,\ell-\ell F,$ and
+$\ell T-\ell D$; every other coefficient is zero.  They are all
+nonpositive, while the strict right side is $a>0$.  Apply
+Lemma~\ref{lem:farkas}.
+\end{proof}
+
+\begin{lemma}[Shape of the complement]\label{lem:complement}
+If the hypotheses of Lemma~\ref{lem:first} hold but $\ell F\not\ge\ell$,
+then
+\[
+ b>0,\qquad f_{11}=0,\qquad af_{01}<b.
+\]
+\end{lemma}
+
+\begin{proof}
+The first component of $\ell F$ is at least $a$ because $f_{00}\ge1$.
+Thus failure occurs in the second component:
+$af_{01}+bf_{11}<b$.  This implies all three assertions.
+\end{proof}
+
+\subsection{Rigidity of carry inequalities}
+
+\begin{lemma}[Diagonal and determinant rigidity]\label{lem:rigidity}
+In each of the six carry inequalities
+\eqref{eq:fcarry}--\eqref{eq:tcarry}, the compared products have equal
+diagonal entries and equal determinants.  Consequently, if both
+off-diagonal entries of the smaller product are positive, the entire
+inequality is an equality.
+\end{lemma}
+
+\begin{proof}
+For $FZ\ge ZF$ and $TD\ge DT$, equality of traces forces equality of the
+two diagonal entries.  For the other four rules, cyclic invariance of trace
+gives the closed chain
+\[
+ \operatorname{tr}(FO)\ge\operatorname{tr}(ZT)
+ =\operatorname{tr}(TZ)\ge\operatorname{tr}(OT)
+ =\operatorname{tr}(TO)\ge\operatorname{tr}(DF)
+ =\operatorname{tr}(FD)\ge\operatorname{tr}(OF)
+ =\operatorname{tr}(FO).
+\]
+Hence all diagonal inequalities are equalities.  If nonnegative
+$2\times2$ matrices $A\ge B$ have the same diagonal, then
+$\det A\le\det B$.  Applying this observation around the analogous closed
+chain of determinants yields equality of all determinants.  For
+off-diagonal pairs $(x,y)\ge(x_0,y_0)$, equality of determinants gives
+$xy=x_0y_0$; if $x_0y_0>0$, both inequalities must be equalities.
+\end{proof}
+
+There is a stronger form in the irreducible branch.
+
+\begin{lemma}[Perron rigidity]\label{lem:perronrigidity}
+If $F+T$ is irreducible, then all six carry inequalities are matrix
+equalities.  In particular,
+\[
+ FD=OF,\qquad TO=DF,qquad TD=DT,qquad TFD=DF^2.
+\tag{K}
+\]
+\end{lemma}
+
+\begin{proof}
+Let $S=Z+O+D$ and let $\Delta_i\ge0$ be the six carry slacks.  Direct
+summation gives
+\[
+ \sum_i\Delta_i=(F+T)S-S(F+T)\ge0.
+\]
+For positive left and right Perron vectors $x^{\mathsf T},y$ of $F+T$,
+the bilinear form of the right side is zero.  A nonnegative matrix between
+strictly positive vectors can have zero bilinear form only if it is zero.
+Thus every $\Delta_i=0$.  The last identity follows by composition:
+$TFD=T(OF)=(TO)F=(DF)F$.
+\end{proof}
+
+\subsection{Excluding non-idempotent shapes}
+
+On the complement in Lemma~\ref{lem:complement}, write
+\[
+ F=\mat{u}{p}{r}{0},\qquad u\ge1,quad p,r\ge0.
+\]
+The following two propositions contain the structural core of the proof.
+
+\begin{proposition}[The $u\ge2$ branches]\label{prop:uge2}
+No matrices satisfying \eqref{eq:dyncoeff}--\eqref{eq:leftcoeff} and
+Lemma~\ref{lem:complement} exist with $u\ge2$.
+\end{proposition}
+
+\begin{proof}
+There are four zero patterns for $(p,r)$.
+
+If $p=r=0$, Lemma~\ref{lem:rigidity}, $LO\ge LF^2$, and $TG\ge DG$
+give $d_{00}=o_{00}\ge u^2$.  Writing the first column of $G$ as
+$(c,d)^{\mathsf T}$ with $c>0$, the first component of $TG\ge DG$
+forces $d>0$ and $t_{01}>d_{01}$.  If $z_{11}>0$, the lower components of
+$FO\ge ZT$ and $TG\ge DG$ reduce the upper-right component of
+$TD\ge DT$ to $ud_{01}\ge d_{00}t_{01}$, impossible because
+$d_{00}>u$.  If $z_{11}=0$, the carry equalities imply
+$u>t_{11}\ge d_{11}$, while the same component gives
+\[
+ d_{01}(u-t_{11})\ge t_{01}(d_{00}-d_{11}).
+\]
+Its left side is strictly below $t_{01}(u-t_{11})$ and its right side is
+strictly above it.
+
+If $p>0,r=0$, rigidity gives
+$z_{10}=o_{10}=0$ and, with $x=o_{00}$,
+\[
+ x\ge u^2,\qquad ud_{00}+pd_{10}=ux,qquad
+ t_{00}x=ud_{00}.
+\]
+Thus $t_{00}x+pd_{10}=ux$ and $t_{00}\le u$.  The first component of
+$TG\ge DG$ forces the first column $(c,d)^{\mathsf T}$ of $G$ to have
+$d>0$ and $t_{01}>d_{01}$.  If $z_{11}>0$, lower carry components force
+$T$ and $D$ to have zero lower rows, and the upper-right component of
+$TD\ge DT$ becomes $ud_{01}\ge xt_{01}$, impossible since $x>u$.
+If $z_{11}=0$, the upper-right component of $FZ\ge ZF$ and the diagonal
+carry equations first rule out $t_{00}<u$; hence
+$t_{00}=u,d_{10}=0,d_{00}=x,z_{00}=x,t_{10}=0$.  The lower dynamic
+component gives $t_{11}\ge d_{11}$.  If $t_{11}=0$, the preceding
+impossible inequality returns directly.  Otherwise the summed upper-right
+carry equations give $u>t_{11}\ge d_{11}$, whereas $TD\ge DT$ requires
+\[
+ d_{01}(u-t_{11})\ge t_{01}(x-d_{11}).
+\]
+The left side is strictly below $t_{01}(u-t_{11})$ and the right side is
+strictly above it.
+
+The case $p=0,r>0$ is the transpose-shaped calculation relevant to the first column.  It yields
+\[
+ t_{01}=0,quad t_{00}=u,quad
+ z_{01}=o_{01}=d_{01}=0,quad z_{00}=o_{00}=d_{00},
+\]
+and then, with $A=au+br>0$,
+\[
+ u(ao_{00}+bo_{10})\le A d_{00},qquad
+ ao_{00}+bo_{10}\ge uA.
+\]
+Hence $d_{00}\ge u^2$, whereas the first component of $TG\ge DG$
+gives $u\ge d_{00}$.
+
+Finally suppose $p,r>0$.  This is covered by
+Proposition~\ref{prop:irreducible}, which in fact permits $u=1$.
+The four cases exhaust all nonnegative $(p,r)$.
+\end{proof}
+
+\begin{proposition}[Fully off-diagonal branch]\label{prop:irreducible}
+There is no solution with $u,p,r\ge1$.
+\end{proposition}
+
+\begin{proof}
+Now $F+T$ is irreducible, so Lemma~\ref{lem:perronrigidity} applies.  Let
+$\lambda>1$ be the Perron root of $F$; the other root $\mu<0$ satisfies
+\[
+ \lambda+\mu=u,qquad \lambda\mu=-pr,qquad
+ F^2=uF+prI.
+\tag{L}
+\]
+The matrix $D$ is nonzero because $d_{00}\ge1$.
+
+If $\operatorname{rank}D=1$, write $D=cd^{\mathsf T}$.  The commutation
+$TD=DT$ and identity (K), together with Perron--Frobenius for the positive
+matrix $F^2$, imply that $d^{\mathsf T}F=\lambda d^{\mathsf T}$ and that
+the eigenvalue of $T$ on the image of $D$ is $\lambda$.  The remaining
+carry equalities then imply $Fc=\lambda c$.  For the first column $g$ of
+$G$, put $h=Dg>0$.  The left and dynamic inequalities yield
+\[
+ \ell h=\ell Dg\ge\ell FTg\ge\ell FDg
+ =\ell Fh=\lambda\ell h,
+\]
+contradicting $\lambda>1$.
+
+If $\operatorname{rank}D=2$, identities (K) and the carry equalities imply
+that $TF$ is similar to $F^2$ and $FT$ is similar to $T^2$.  Traces and
+determinants show that $T$ and $F$ share the roots $\lambda,\mu$.
+Moreover $FZ=ZF$ gives $Z=\alpha I+\beta F$ with
+$\alpha,\beta\ge0$.  Expressing $FTZ=ZT^2$ in an eigenbasis of $F$ shows
+that the Perron eigenvector $v>0$ of $F$ is also a Perron eigenvector of
+$T$.  Since $TD=DT$, write $Dv=\delta v$.  The dynamic inequality gives
+$\delta\le\lambda$, while $LD\ge LFT$ gives
+$\delta\ell v\ge\lambda^2\ell v$, so $\delta\ge\lambda^2$.  Again this
+contradicts $\lambda>1$.
+\end{proof}
+
+\begin{corollary}[Exhaustive residual classification]\label{cor:forms}
+Every coefficient assignment not covered by Lemma~\ref{lem:first} has
+\[
+ F^2=F,qquad
+ F\in\left\{
+ \mat{1}{0}{0}{0},
+ \mat{1}{p}{0}{0}\ (p\ge1),
+ \mat{1}{0}{r}{0}\ (r\ge1)
+ \right\}.
+\]
+\end{corollary}
+
+\begin{proof}
+Lemma~\ref{lem:complement} gives $f_{11}=0$ and monotonicity gives
+$u=f_{00}\ge1$.  Proposition~\ref{prop:uge2} forces $u=1$, while
+Proposition~\ref{prop:irreducible} forces $pr=0$.  Hence
+$F=\mat{1}{p}{r}{0}$ with $pr=0$, and direct multiplication gives
+$F^2=F$.  The three displayed cases are exhaustive.
+\end{proof}
+
+\subsection{Covering the three idempotent forms}
+
+The final step is offset infeasibility.  Each case below is closed by one
+of seven parameterized certificate schemes.  Their exact supports and
+weights are reconstructed by the artifact; Appendix~\ref{app:certs}
+records the mathematical predicates used by the checker.
+
+\begin{proposition}[Lower form]\label{prop:lower}
+If $F=\mat{1}{0}{r}{0}$ with $r\ge1$, the relative offset system is
+infeasible.
+\end{proposition}
+
+\begin{proof}
+The lower-triangular calculation in Proposition~\ref{prop:uge2}, up to the
+step that used $u\ge2$, remains valid at $u=1$.  It yields
+\[
+ t_{00}=1,\ t_{01}=0,\quad
+ z_{01}=o_{01}=d_{01}=0,\quad z_{00}=o_{00}=d_{00}=1.
+\]
+The lower-left components of $FD\ge OF$ and $LO\ge LF^2$ force
+$o_{10}=r,o_{11}=0$.  The remaining carry and left inequalities force
+$z_{11}=t_{11}=0$, $z_{10}=t_{10}=r$, and $d_{10}\ge r$.  These are
+exactly the applicability conditions of certificate scheme~5; its strict
+right side is $5(a+br)>0$.
+\end{proof}
+
+\begin{proposition}[Projection form]\label{prop:projection}
+If $F=\operatorname{diag}(1,0)$, one of certificate schemes 2--6 applies.
+\end{proposition}
+
+\begin{proof}
+Carry rigidity gives $z_{10}=o_{10}=0$ and $d_{00}=o_{00}$.  If
+$z_{11}\ge1$, scheme~2 applies.  Otherwise $t_{10}>0$ would force,
+successively, $z_{00}=1,z_{01}=0$ and the impossible first-row inequality
+$a\ge at_{00}+bt_{10}>a$.  Thus $t_{10}=d_{10}=0$, and the remaining
+diagonal equations give $z_{00}=o_{00}=d_{00}=t_{00}=1$.
+
+Set $s=t_{01}$, $y=t_{11}$, $z=z_{01}$, $o=o_{01}$,
+$q=o_{11}$, $d=d_{01}$, and $e=d_{11}$.  The carry and left rules imply
+\[
+ o\ge s+zy,quad z\ge s+oy,quad az\ge as+by,quad qy=0.
+\]
+If $y>0$, these force $y=1,s=0,o=z$, and $az\ge b$, which is scheme~6.
+If $y=0$ and $s\le d$, scheme~5 applies.  If $y=0$ and $s>d$, the last
+left inequality gives $ad+be\ge as$, hence $e\ge1$.  For $e=1$ use
+scheme~3.  For $e\ge2$ the integer interval of scheme~4 is nonempty; one
+valid choice is
+\[
+ x=\max\left\{\left\lceil b/2\right\rceil,
+ \left\lceil a(s-d)/(e+1)\right\rceil\right\}\le b.
+\]
+These cases are exhaustive.
+\end{proof}
+
+\begin{proposition}[Upper form]\label{prop:upper}
+If $F=\mat{1}{p}{0}{0}$ with $p\ge1$, one of certificate schemes 4 or 12
+applies.
+\end{proposition}
+
+\begin{proof}
+Lemma~\ref{lem:complement} gives $b>ap$.  The carry rules first imply
+$z_{10}=o_{10}=0$.  If $t_{10}>0$, Perron rigidity makes every carry rule
+an equality.  Then $z_{11}=0$, $Z=cF$ for $c=z_{00}\ge1$, and, on writing
+$T=\mat{x}{y}{s}{w}$ with $s>0$, the carry equations reduce to
+\[
+ 0=(x-1)(x+ps)+ys+p^2s^2,
+\]
+which is impossible.  Hence $t_{10}=d_{10}=0$, and the diagonal equations
+give $z_{00}=o_{00}=d_{00}=t_{00}=1$.
+
+Put $s=t_{01}$, $w=t_{11}$, $z=z_{01}$, $k=z_{11}$,
+$o=o_{01}$, $q=o_{11}$, $d=d_{01}$, and $e=d_{11}$.  The required
+scalar consequences are
+\begin{gather*}
+ z+pk\ge p,\quad o+pq\ge s+zw,\quad d+pe\ge p,\\
+ z+sk\ge s+ow,\quad o+sq\ge p,\quad d+se\ge s+dw,\\
+ az+bk\ge as+bw,\quad ao+bq\ge ap,\quad
+ ad+be\ge a(s+pw),\quad kw=qw=0.
+\tag{N}
+\end{gather*}
+If $w>0$, (N) forces $k=q=0$, then $w=1,s=0,z=o$.  If $e\le1$,
+scheme~12 applies; if $e\ge2$, scheme~4 applies with $x=b$.  If $w=0$,
+scheme~12 again applies for $e\le1$, while for $e\ge2$ scheme~4 applies
+with $x=b$, using $ap-b<0$.  Thus every upper-form assignment is covered.
+\end{proof}
+
+\begin{theorem}[Unbounded two-dimensional no-go]\label{thm:main}
+The system $\Tsys$ has no relative natural affine matrix interpretation of
+dimension two in which the two dynamic rules are strict and the other nine
+rules are weak.  Matrix entries and offsets are unrestricted elements of
+$\N$.
+\end{theorem}
+
+\begin{proof}
+If a coefficient inequality
+\eqref{eq:dyncoeff}--\eqref{eq:leftcoeff} fails, no interpretation exists.
+Otherwise, Lemma~\ref{lem:first} supplies a certificate when
+$\ell F\ge\ell$.  On its complement,
+Corollary~\ref{cor:forms} gives exactly the lower, projection, or upper
+idempotent form.  Propositions~\ref{prop:lower}--\ref{prop:upper} cover
+those forms by exact nonnegative Farkas certificates with positive strict
+right side.  Lemma~\ref{lem:farkas} excludes the offsets in every case.
+\end{proof}
+
+\begin{corollary}
+No such interpretation exists in dimension at most two.
+\end{corollary}
+
+\section{Automation and reproducibility}
+
+The implementation has two deliberately separated layers.
+
+\paragraph{Discovery.}
+Bounded enumeration and linear programming were used to find small supports
+for dual certificates.  Counterexamples to provisional families enlarged
+the search region.  The numerical LP output is not used by the final
+verifier.
+
+\paragraph{Exact checking.}
+The Python module \texttt{sag\_collatz.matrix\_attack} stores the original
+rewrite rules, constructs word matrices and offsets, and validates all
+certificate rows with arbitrary-precision integer arithmetic.  The only
+certificate with a free integer weight solves its fourteen inequalities as
+an exact integer interval rather than by bounded trial.  A separate C++17
+program exhaustively regression-tests bounded coefficient boxes.
+
+\paragraph{What the checker proves.}
+For any supplied matrix assignment, the checker validates the coefficient
+obligations, selects a parameterized family, and reconstructs a Farkas
+contradiction.  It does not by itself prove that the families cover every
+unbounded assignment.  That universal coverage is the content of
+Lemmas~\ref{lem:complement}--\ref{lem:perronrigidity},
+Propositions~\ref{prop:uge2}--\ref{prop:upper}, and
+Corollary~\ref{cor:forms}.  We call the result \emph{computer-assisted}, not
+formally verified in Lean, Coq, or an SMT proof calculus.
+
+The repository contains unit tests for rule expansion, exact certificate
+validation, adversarial mutations, the scalar theorem, bounded exhaustive
+counts, and structural families at coefficients far outside the discovery
+boxes.  Reproduction commands and expected outputs are recorded in
+\texttt{ARTIFACT.md}.
+
+\section{Related work}
+
+Matrix interpretations for term and string rewriting were developed as a
+general automatic termination technique by Endrullis, Waldmann, and
+Zantema~\cite{endmat}, building on automatic string-rewriting termination
+methods such as~\cite{zantema}.  Relative termination and rule removal are
+standard ways to combine weak and strict orientation obligations
+\cite{termbook}.
+
+YAH~\cite{yah} provide the direct point of departure: they prove the
+equivalence between Collatz and termination of $\Tsys$, automatically find
+interpretations for weakened systems, and identify nonexistence of suitable
+interpretations for the full system as a useful possibility to investigate.
+They also prove a substantially broader natural-matrix obstruction for a
+different, previously studied \emph{unary} Collatz rewrite encoding, even in
+combination with dependency pairs.  That theorem does not apply to the
+mixed-base system $\Tsys$ considered here; conversely, our theorem is limited
+to dimensions at most two but addresses the mixed-base encoding that makes
+their automated positive results possible.
+Our work is complementary to automatic synthesis.  It certifies that one
+specific synthesis space---one-stage natural affine interpretations in
+dimensions at most two---is empty even with unbounded coefficients.
+
+The result is not a lower bound for all matrix interpretations.  Natural
+matrices in arbitrary dimension are already only one termination language;
+arctic and tropical semirings, dependency pairs, and richer interpretation
+schemes have different expressive power.  Nor does failure in every fixed
+finite dimension automatically imply nontermination of the rewrite system.
+
+\section{Limitations and conclusion}
+
+Theorem~\ref{thm:main} is a no-go theorem about a proof method.  It neither
+proves nor refutes Collatz.  Specifically, it leaves open:
+\begin{itemize}[leftmargin=*]
+  \item natural matrix interpretations of dimension at least three;
+  \item arctic, tropical, and other ordered semirings;
+  \item dependency-pair transformations;
+  \item multi-stage rule-removal sequences outside the single relative
+        obligation studied here;
+  \item alternative rewrite encodings equivalent to Collatz.
+\end{itemize}
+
+Within its scope, however, the theorem is complete: there is no coefficient
+ceiling, no offset ceiling, and no unclassified zero pattern.  The proof also
+demonstrates a useful workflow for automated reasoning.  Small exhaustive
+search can expose recurring dual supports; exact arithmetic can turn them
+into trusted local certificates; and structural algebra can remove the
+finite search boundary.  Here that process closes a concrete low-dimensional
+search space proposed by an influential automated approach to Collatz.
+
+\section*{Statements and Declarations}
+
+\paragraph{Competing interests.}
+The authors declare no competing interests.
+
+\paragraph{Funding.}
+No funding was received for this work.
+
+\paragraph{Data and code availability.}
+All source code, exact certificates, tests, and the manuscript sources will
+be available at
+\url{https://github.com/kadirbekov-ship-it/collatz-matrix-no-go} and in a
+versioned archival deposit at
+\url{https://doi.org/10.5281/zenodo.22097842}.
+
+\paragraph{Author contributions.}
+K.K. and D.K. contributed to the conception, oversight of the AI-assisted
+mathematical analysis, verification workflow, and review of the manuscript.
+Both authors reviewed and approved the submitted version.
+
+\paragraph{Use of generative AI.}
+OpenAI Codex using GPT-5.6 Sol was used as an adversarial mathematical and
+coding assistant for exploratory derivations, implementation, testing, and
+language drafting.  Anthropic Claude Opus was used for a separate adversarial
+audit of intermediate claims and calculations.  All theorem statements,
+proofs, computations, citations, and the final manuscript were reviewed and
+accepted by the human authors.  Model outputs were not treated as independent
+evidence, and the systems are not authors.
+
+\appendix
+\section{Certificate predicates}\label{app:certs}
+
+For auditability we summarize the seven schemes used by the universal proof.
+Each predicate is sufficient for the exact row emitted by the implementation;
+the checker expands the row against all fourteen offset variables.
+
+Write $\Delta_r^i$ for the offset difference of rule $r$ in component $i$.
+The seven nonnegative combinations are
+\begin{align*}
+C_1={}&a\Delta_{\mathrm{odd}}^0+b\Delta_{\mathrm{odd}}^1
+       +\Delta_{\mathrm{left2}}^0,\\
+C_2={}&a\Delta_{\mathrm{even}}^0+a\Delta_{\mathrm{odd}}^0
+       +b\Delta_{\mathrm{odd}}^1+b\Delta_{\mathrm{f1}}^1
+       +\Delta_{\mathrm{left2}}^0,\\
+C_3={}&a\Delta_{\mathrm{even}}^0+b\Delta_{\mathrm{even}}^1
+       +a\Delta_{\mathrm{odd}}^0+b\Delta_{\mathrm{t2}}^1
+       +\Delta_{\mathrm{left2}}^0,\\
+C_4(x)={}&a\Delta_{\mathrm{even}}^0+x\Delta_{\mathrm{even}}^1
+       +a\Delta_{\mathrm{odd}}^0+x\Delta_{\mathrm{odd}}^1
+       +x\Delta_{\mathrm{t2}}^1+\Delta_{\mathrm{left2}}^0.
+\end{align*}
+For scheme~5 put $A=a+bf_{10}$; then
+\begin{align*}
+C_5={}&2A\Delta_{\mathrm{even}}^0+3A\Delta_{\mathrm{odd}}^0
+ +a\Delta_{\mathrm{f1}}^0+b\Delta_{\mathrm{f1}}^1\\
+& +(2a+bf_{10})\Delta_{\mathrm{f2}}^0
+ +b\Delta_{\mathrm{f2}}^1+b\Delta_{\mathrm{t2}}^1
+ +\Delta_{\mathrm{left0}}^0+\Delta_{\mathrm{left1}}^0
+ +\Delta_{\mathrm{left2}}^0.
+\end{align*}
+Scheme~6 is
+\begin{align*}
+C_6={}&3a\Delta_{\mathrm{even}}^0+3a\Delta_{\mathrm{odd}}^0
+ +a\Delta_{\mathrm{f1}}^0+a\Delta_{\mathrm{f2}}^0
+ +3b\Delta_{\mathrm{f2}}^1\\
+&+a\Delta_{\mathrm{t0}}^0+2b\Delta_{\mathrm{t1}}^1
+ +\Delta_{\mathrm{left1}}^0+2\Delta_{\mathrm{left2}}^0.
+\end{align*}
+For scheme~12 put
+\[
+ K=az_{01}+bz_{11},\qquad
+ q=a\bigl(o_{01}-f_{01}(1-o_{11})\bigr),\qquad
+ H=af_{01}+d_{11}K+b.
+\]
+Then
+\begin{align*}
+C_{12}={}&q\Delta_{\mathrm{even}}^1+3a\Delta_{\mathrm{odd}}^0
+ +H\Delta_{\mathrm{odd}}^1+a\Delta_{\mathrm{f1}}^0
+ +b\Delta_{\mathrm{f1}}^1\\
+&+a\Delta_{\mathrm{f2}}^0+af_{01}\Delta_{\mathrm{f2}}^1
+ +\Delta_{\mathrm{left0}}^0+\Delta_{\mathrm{left2}}^0.
+\end{align*}
+In every branch used in the proof, the displayed weights are nonnegative,
+all fourteen coefficients of the relevant $C_i$ are nonpositive, and the
+strict right side is positive.  These assertions follow by direct expansion
+from the branch inequalities; the implementation performs the same expansion
+without simplification.
+
+Scheme~1 is Lemma~\ref{lem:first}.  In the complement
+$b>0,f_{11}=0,af_{01}<b$, scheme~2 is equivalent to
+\[
+ f_{10}=0,qquad z_{11}\ge1,qquad
+ ad_{01}+bd_{11}\ge a(f_{01}+t_{01}).
+\]
+Scheme~5 is equivalent there to
+\begin{gather*}
+ f_{00}=1,quad f_{01}=0,quad t_{11}=0,quad t_{10}\le f_{10},\\
+ 2a(1-o_{00})+bf_{10}(2-o_{00})-bo_{10}\le0,\\
+ a(1-z_{00})+b(2f_{10}-d_{10}-z_{10})\le0,\\
+ t_{00}\le d_{00},qquad t_{01}\le d_{01}.
+\end{gather*}
+Schemes~3 and~6 are the special projection-form branches identified in
+Proposition~\ref{prop:projection}; scheme~12 is the upper-form branch in
+Proposition~\ref{prop:upper}.
+
+Scheme~4 contains one positive integer parameter $x$.  Every combined
+coefficient has the form $A_j+xB_j$.  The implementation intersects the
+exact lower and upper integer bounds
+\[
+ x\ge\max_{B_j<0}\left\lceil\frac{A_j}{-B_j}\right\rceil,
+ \qquad
+ x\le\min_{B_j>0}\left\lfloor\frac{-A_j}{B_j}\right\rfloor,
+\]
+together with $x\ge1$, and then reconstructs the certificate.  Thus no
+finite search limit is hidden in the parameterized family.
+
+The machine-readable supports and all unsimplified coefficient predicates
+are distributed with the artifact as an additional check against transcription
+errors.
+
+\begin{thebibliography}{9}
+
+\bibitem{yah}
+E. Yolcu, S. Aaronson, M. J. H. Heule,
+An automated approach to the Collatz conjecture,
+\emph{Journal of Automated Reasoning} 67, 15 (2023).
+\url{https://doi.org/10.1007/s10817-022-09658-8}
+
+\bibitem{endmat}
+J. Endrullis, J. Waldmann, H. Zantema,
+Matrix interpretations for proving termination of term rewriting,
+\emph{Journal of Automated Reasoning} 40, 195--220 (2008).
+\url{https://doi.org/10.1007/s10817-007-9087-9}
+
+\bibitem{zantema}
+H. Zantema,
+Termination of string rewriting proved automatically,
+\emph{Journal of Automated Reasoning} 34, 105--139 (2005).
+\url{https://doi.org/10.1007/s10817-005-6545-0}
+
+\bibitem{schrijver}
+A. Schrijver,
+\emph{Theory of Linear and Integer Programming},
+Wiley, Chichester (1986).
+
+\bibitem{termbook}
+F. Baader, T. Nipkow,
+\emph{Term Rewriting and All That},
+Cambridge University Press, Cambridge (1998).
+\url{https://doi.org/10.1017/CBO9781139172752}
+
+\end{thebibliography}
+
+\end{document}

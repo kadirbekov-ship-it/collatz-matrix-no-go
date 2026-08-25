@@ -1,0 +1,27 @@
+{
+  "certificate_sha256": "4d9e1a334d72a472639ad49d806246f022f39d4567b60d915b37d6a311cd507b",
+  "certified_classes": 496959,
+  "coverage_ratio": "496959/524288",
+  "exact_certificates": 492556,
+  "format": "sag-collatz-residue-v1",
+  "k": 20,
+  "modulus": 1048576,
+  "odd_residue_classes": 524288,
+  "step_histogram": {
+    "1": 262143,
+    "10": 7616,
+    "11": 3844,
+    "12": 2652,
+    "2": 65536,
+    "3": 65536,
+    "4": 24576,
+    "5": 28672,
+    "6": 12288,
+    "7": 7680,
+    "8": 10880,
+    "9": 5536
+  },
+  "step_limit": 63,
+  "truncated_certificates": 4403,
+  "unresolved_classes": 27329
+}

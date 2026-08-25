@@ -1,0 +1,195 @@
+{
+  "certified_classes": 32517057,
+  "coverage_ratio": "32517057/33554432",
+  "format": "sag-collatz-open-frontier-v1",
+  "frontier_sha256": "ae334e6165b0b50fa6134a3fcc20fc1850758be8815df8e424da228ceae2478a",
+  "history": [
+    {
+      "certified_classes": 0,
+      "coverage_ratio": "0/1",
+      "k": 1,
+      "open_classes": 1,
+      "total_classes": 1
+    },
+    {
+      "certified_classes": 0,
+      "coverage_ratio": "0/2",
+      "k": 2,
+      "open_classes": 2,
+      "total_classes": 2
+    },
+    {
+      "certified_classes": 1,
+      "coverage_ratio": "1/4",
+      "k": 3,
+      "open_classes": 3,
+      "total_classes": 4
+    },
+    {
+      "certified_classes": 4,
+      "coverage_ratio": "4/8",
+      "k": 4,
+      "open_classes": 4,
+      "total_classes": 8
+    },
+    {
+      "certified_classes": 11,
+      "coverage_ratio": "11/16",
+      "k": 5,
+      "open_classes": 5,
+      "total_classes": 16
+    },
+    {
+      "certified_classes": 23,
+      "coverage_ratio": "23/32",
+      "k": 6,
+      "open_classes": 9,
+      "total_classes": 32
+    },
+    {
+      "certified_classes": 50,
+      "coverage_ratio": "50/64",
+      "k": 7,
+      "open_classes": 14,
+      "total_classes": 64
+    },
+    {
+      "certified_classes": 108,
+      "coverage_ratio": "108/128",
+      "k": 8,
+      "open_classes": 20,
+      "total_classes": 128
+    },
+    {
+      "certified_classes": 217,
+      "coverage_ratio": "217/256",
+      "k": 9,
+      "open_classes": 39,
+      "total_classes": 256
+    },
+    {
+      "certified_classes": 447,
+      "coverage_ratio": "447/512",
+      "k": 10,
+      "open_classes": 65,
+      "total_classes": 512
+    },
+    {
+      "certified_classes": 895,
+      "coverage_ratio": "895/1024",
+      "k": 11,
+      "open_classes": 129,
+      "total_classes": 1024
+    },
+    {
+      "certified_classes": 1821,
+      "coverage_ratio": "1821/2048",
+      "k": 12,
+      "open_classes": 227,
+      "total_classes": 2048
+    },
+    {
+      "certified_classes": 3728,
+      "coverage_ratio": "3728/4096",
+      "k": 13,
+      "open_classes": 368,
+      "total_classes": 4096
+    },
+    {
+      "certified_classes": 7457,
+      "coverage_ratio": "7457/8192",
+      "k": 14,
+      "open_classes": 735,
+      "total_classes": 8192
+    },
+    {
+      "certified_classes": 15088,
+      "coverage_ratio": "15088/16384",
+      "k": 15,
+      "open_classes": 1296,
+      "total_classes": 16384
+    },
+    {
+      "certified_classes": 30653,
+      "coverage_ratio": "30653/32768",
+      "k": 16,
+      "open_classes": 2115,
+      "total_classes": 32768
+    },
+    {
+      "certified_classes": 61307,
+      "coverage_ratio": "61307/65536",
+      "k": 17,
+      "open_classes": 4229,
+      "total_classes": 65536
+    },
+    {
+      "certified_classes": 123576,
+      "coverage_ratio": "123576/131072",
+      "k": 18,
+      "open_classes": 7496,
+      "total_classes": 131072
+    },
+    {
+      "certified_classes": 247153,
+      "coverage_ratio": "247153/262144",
+      "k": 19,
+      "open_classes": 14991,
+      "total_classes": 262144
+    },
+    {
+      "certified_classes": 496959,
+      "coverage_ratio": "496959/524288",
+      "k": 20,
+      "open_classes": 27329,
+      "total_classes": 524288
+    },
+    {
+      "certified_classes": 1001964,
+      "coverage_ratio": "1001964/1048576",
+      "k": 21,
+      "open_classes": 46612,
+      "total_classes": 1048576
+    },
+    {
+      "certified_classes": 2003929,
+      "coverage_ratio": "2003929/2097152",
+      "k": 22,
+      "open_classes": 93223,
+      "total_classes": 2097152
+    },
+    {
+      "certified_classes": 4025496,
+      "coverage_ratio": "4025496/4194304",
+      "k": 23,
+      "open_classes": 168808,
+      "total_classes": 4194304
+    },
+    {
+      "certified_classes": 8102026,
+      "coverage_ratio": "8102026/8388608",
+      "k": 24,
+      "open_classes": 286582,
+      "total_classes": 8388608
+    },
+    {
+      "certified_classes": 16204053,
+      "coverage_ratio": "16204053/16777216",
+      "k": 25,
+      "open_classes": 573163,
+      "total_classes": 16777216
+    },
+    {
+      "certified_classes": 32517057,
+      "coverage_ratio": "32517057/33554432",
+      "k": 26,
+      "open_classes": 1037375,
+      "total_classes": 33554432
+    }
+  ],
+  "integer_encoding": "little-endian uint32",
+  "k": 26,
+  "open_classes": 1037375,
+  "step_limit": 63,
+  "total_classes": 33554432
+}

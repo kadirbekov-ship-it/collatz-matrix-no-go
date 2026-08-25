@@ -1,0 +1,14 @@
+{
+  "concrete_checks": 50000,
+  "largest_quotient_bits": 1024,
+  "passed": true,
+  "quotient_bit_lengths": [
+    0,
+    1,
+    64,
+    256,
+    1024
+  ],
+  "sampled_certificates": 10000,
+  "seed": 201398898
+}

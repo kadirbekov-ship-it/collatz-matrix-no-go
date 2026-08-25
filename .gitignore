@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+dist/
+submission/*.aux
+submission/*.log
+submission/*.out
+submission/*.pdf

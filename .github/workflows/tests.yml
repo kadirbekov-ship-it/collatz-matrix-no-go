@@ -1,0 +1,20 @@
+name: exact-artifact-tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fast-exact-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact manuscript-facing tests
+        run: python -m unittest tests.test_certificates tests.test_matrix_structural -v
+      - name: Compile bounded C++ verifier
+        run: c++ -O3 -std=c++17 tools/verify_relative_cubic.cpp -o /tmp/verify-relative-cubic
+      - name: Run default bounded verifier
+        run: /tmp/verify-relative-cubic

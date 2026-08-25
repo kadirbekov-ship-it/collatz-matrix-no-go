@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the associated article."
+title: "Obstructions to Low-Dimensional Natural Matrix Interpretations for a Mixed-Base Collatz Rewrite System"
+type: software
+authors:
+  - family-names: "Kadyrbekov"
+    given-names: "Khamit"
+    email: "kadirbekov@gmail.com"
+    affiliation: "Independent Researcher, Tashkent, Uzbekistan"
+  - family-names: "Kadirbekov"
+    given-names: "Daniyal"
+    email: "daniyal.kadirbekov@gmail.com"
+    affiliation: "Independent Researcher, Tashkent, Uzbekistan"
+    orcid: "https://orcid.org/0009-0006-0320-9821"
+version: 1.0.0
+date-released: 2026-08-25
+license: MIT
+repository-code: "https://github.com/kadirbekov-ship-it/collatz-matrix-no-go"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22097842"

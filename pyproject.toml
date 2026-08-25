@@ -1,0 +1,16 @@
+[project]
+name = "socratic-collatz-graph"
+version = "1.0.0"
+description = "Exact certificates and structural no-go results for Collatz rewrite-system proof languages"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "Kadyrbekov Khamit", email = "kadirbekov@gmail.com"},
+  {name = "Kadirbekov Daniyal", email = "daniyal.kadirbekov@gmail.com"},
+]
+
+[project.urls]
+Repository = "https://github.com/kadirbekov-ship-it/collatz-matrix-no-go"
+
+[tool.unittest]
+start-directory = "tests"
