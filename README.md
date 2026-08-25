@@ -1,6 +1,6 @@
 # Socratic Adversarial Graph: finite Collatz experiment
 
-Artifact DOI (reserved; activated on publication):
+Published artifact DOI:
 [10.5281/zenodo.22097842](https://doi.org/10.5281/zenodo.22097842).
 
 ## Publication package

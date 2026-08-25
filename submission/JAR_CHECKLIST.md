@@ -24,10 +24,10 @@ Checked against the current Springer Nature instructions on 2026-08-25.
 - [x] Tests include adversarial certificate mutations.
 - [x] Reproduction instructions are present in `ARTIFACT.md`.
 - [x] Public repository exists: `https://github.com/kadirbekov-ship-it/collatz-matrix-no-go`.
-- [ ] Versioned release tag exists.
-- [x] Zenodo DOI is reserved: `10.5281/zenodo.22097842`.
+- [x] Versioned release tag exists: `v1.0.0`.
+- [x] Zenodo DOI is published and active: `10.5281/zenodo.22097842`.
 - [x] MIT license and author copyright line are confirmed.
-- [ ] Clean-machine/CI reproduction has passed on Python 3.11+.
+- [x] Clean-machine/CI reproduction has passed on Python 3.11+ (GitHub Actions run `32862575691`).
 
 ## Submission declarations
 
